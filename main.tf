@@ -28,8 +28,52 @@ resource "aws_instance" "kibana_instance" {
     Name = "kibana_instance"
   }
 }
+# resource "aws_eip" "kibana_eip" {
+#   instance = aws_instance.kibana_instance.id
+#   vpc = true
+# }
+resource "aws_instance" "bastion_host" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.small"
 
-resource "aws_eip" "kibana_eip" {
-  instance = aws_instance.kibana_instance.id
+  vpc_security_group_ids = [aws_security_group.bastion_host_sg.id]
+
+  key_name = "talent-academy-lab"
+  subnet_id = data.aws_subnet.public.id
+
+  tags = {
+    Name = "Bastion-Host"
+  }
+}
+
+resource "aws_eip" "bastion_host_ip" {
+  instance = aws_instance.bastion_host.id
   vpc = true
 }
+
+resource "aws_instance" "es_instance" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.micro"
+
+  vpc_security_group_ids = [aws_security_group.elasticsearch_sg.id]
+  key_name = "talent-academy-lab"
+  subnet_id = aws_subnet.private.id
+
+  tags = {
+    Name = "es_instance"
+  }
+}
+
+resource "aws_instance" "logstash_instance" {
+  ami           = data.aws_ami.ubuntu.id
+  instance_type = "t3.micro"
+
+  vpc_security_group_ids = [aws_security_group.logstash_sg.id]
+  key_name = "talent-academy-lab"
+  subnet_id = aws_subnet.private.id
+
+  tags = {
+    Name = "logstash_instance"
+  }
+}
+
