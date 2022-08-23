@@ -17,15 +17,33 @@ resource "aws_subnet" "private" {
   }
 }
 
-resource "aws_subnet" "data" {
+resource "aws_subnet" "data1" {
   vpc_id     = aws_vpc.elk_vpc.id
   cidr_block = "192.168.3.0/24"
+  availability_zone = "eu-west1a"
 
   tags = {
-    Name = "Application Subnet-Private"
+    Name = "Application Subnet-Private1"
   }
 }
 
+resource "aws_subnet" "data2" {
+  vpc_id     = aws_vpc.elk_vpc.id
+  cidr_block = "192.168.3.0/24"
+  availability_zone = "eu-west1b"
+  tags = {
+    Name = "Application Subnet-Private2"
+  }
+}
+
+resource "aws_subnet" "data3" {
+  vpc_id     = aws_vpc.elk_vpc.id
+  cidr_block = "192.168.3.0/24"
+  availability_zone = "eu-west1c"
+  tags = {
+    Name = "Application Subnet-Private3"
+  }
+}
 resource "aws_internet_gateway" "gw" {
   vpc_id = aws_vpc.elk_vpc.id
 
@@ -88,7 +106,17 @@ resource "aws_route_table_association" "private" {
   route_table_id = aws_route_table.nat_route_table.id
 }
 
-resource "aws_route_table_association" "data" {
-  subnet_id      = aws_subnet.data.id
+resource "aws_route_table_association" "data1" {
+  subnet_id      = aws_subnet.data1.id
+  route_table_id = aws_route_table.nat_route_table.id
+}
+
+resource "aws_route_table_association" "data2" {
+  subnet_id      = aws_subnet.data2.id
+  route_table_id = aws_route_table.nat_route_table.id
+}
+
+resource "aws_route_table_association" "data3" {
+  subnet_id      = aws_subnet.data3.id
   route_table_id = aws_route_table.nat_route_table.id
 }
