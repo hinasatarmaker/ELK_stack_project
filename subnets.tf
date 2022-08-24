@@ -20,7 +20,7 @@ resource "aws_subnet" "private" {
 resource "aws_subnet" "data1" {
   vpc_id     = aws_vpc.elk_vpc.id
   cidr_block = "192.168.3.0/24"
-  availability_zone = "eu-west1a"
+  availability_zone = "eu-west-1a"
 
   tags = {
     Name = "Application Subnet-Private1"
@@ -29,8 +29,8 @@ resource "aws_subnet" "data1" {
 
 resource "aws_subnet" "data2" {
   vpc_id     = aws_vpc.elk_vpc.id
-  cidr_block = "192.168.3.0/24"
-  availability_zone = "eu-west1b"
+  cidr_block = "192.168.4.0/24"
+  availability_zone = "eu-west-1b"
   tags = {
     Name = "Application Subnet-Private2"
   }
@@ -38,8 +38,8 @@ resource "aws_subnet" "data2" {
 
 resource "aws_subnet" "data3" {
   vpc_id     = aws_vpc.elk_vpc.id
-  cidr_block = "192.168.3.0/24"
-  availability_zone = "eu-west1c"
+  cidr_block = "192.168.5.0/24"
+  availability_zone = "eu-west-1c"
   tags = {
     Name = "Application Subnet-Private3"
   }
