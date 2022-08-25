@@ -12,10 +12,11 @@ resource "aws_security_group" "kibana_sg" {
   }
   ingress {
     description = "ingress rules"
-    cidr_blocks = [ "0.0.0.0/0" ]
     from_port = 5601
-    protocol = "tcp"
     to_port = 5601
+    protocol = "tcp"
+    cidr_blocks = [ "192.168.2.184/32" ]
+   
   }
   egress {
     from_port        = 0
@@ -40,16 +41,16 @@ resource "aws_security_group" "bastion_host_sg" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    cidr_blocks      = ["106.213.109.28/32"]
   }
   
-   ingress {
-     description      = "Allow port 22"
-     from_port        = 80
-     to_port          = 80
-     protocol         = "tcp"
-     cidr_blocks      = ["0.0.0.0/0"]
-   }
+  #  ingress {
+  #    description      = "Allow port 22"
+  #    from_port        = 80
+  #    to_port          = 80
+  #    protocol         = "tcp"
+  #    cidr_blocks      = ["0.0.0.0/0"]
+  #  }
 
   egress {
     from_port        = 0
@@ -69,11 +70,25 @@ resource "aws_security_group" "elasticsearch_sg" {
   vpc_id = aws_vpc.elk_vpc.id
   
   ingress {
+    description      = "Allow port 22"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
+  ingress {
     description = "ingress rules"
-    cidr_blocks = [ "0.0.0.0/0" ]
     from_port = 9200
-    protocol = "tcp"
     to_port = 9200
+    protocol = "tcp"
+    cidr_blocks = [ "192.168.2.21/32" ]
+  }
+  ingress {
+    description = "ingress rules"
+    from_port = 9200
+    to_port = 9200
+    protocol = "tcp"
+    cidr_blocks = [ "46.137.101.160/32" ]
   }
   egress {
     description = "egress rules"
@@ -90,12 +105,21 @@ resource "aws_security_group" "elasticsearch_sg" {
 
 resource "aws_security_group" "logstash_sg" {
   vpc_id = aws_vpc.elk_vpc.id
+  
+  ingress {
+    description      = "Allow port 22"
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+  }
   ingress {
     description = "ingress rules"
-    cidr_blocks = [ "0.0.0.0/0" ]
     from_port = 5044
-    protocol = "tcp"
     to_port = 5044
+    protocol = "tcp"
+    cidr_blocks = [ "192.168.2.184/32" ]
+    cidr_blocks = [ "0.0.0.0/0" ]
   }
   egress {
     description = "egress rules"
@@ -127,5 +151,37 @@ resource "aws_security_group" "packer_sg" {
   }
   tags={
     Name="packer_sg"
+  }
+}
+
+resource "aws_security_group" "demo_sg" {
+  vpc_id = aws_vpc.elk_vpc.id
+  ingress {
+    description = "ingress rules"
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    # cidr_blocks = [ "18.203.195.175/32" ]
+    cidr_blocks = [ "0.0.0.0/0" ]
+  }
+
+  ingress {
+    description = "ingress rules"
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    # security_groups = [aws_security_group.packer_sg]
+    cidr_blocks = [ "18.203.195.175/32" ]
+    # cidr_blocks = [ "0.0.0.0/0" ]
+  }
+  egress {
+    description = "egress rules"
+    cidr_blocks = [ "0.0.0.0/0" ]
+    from_port = 0
+    protocol = "-1"
+    to_port = 0
+  }
+  tags={
+    Name="demo_sg"
   }
 }
