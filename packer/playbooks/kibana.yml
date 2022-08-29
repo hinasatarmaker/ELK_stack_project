@@ -1,0 +1,52 @@
+---
+- hosts: default
+  become: true
+
+  tasks:
+    - name: updating apt cache if needed
+      become: yes
+      apt:
+        update_cache=yes
+
+    - name: Installing Java Runtime Environment 
+      become: yes
+      apt:
+       name: default-jre
+       state: present
+
+    - name: Downloading Kibana Deb Package
+      get_url:
+        url: https://artifacts.elastic.co/downloads/kibana/kibana-8.3.0-amd64.deb
+        dest: /tmp
+
+    - name: Installing Kibana Deb Package
+      become: yes
+      apt:
+        deb: /tmp/kibana-8.3.0-amd64.deb
+    
+    - name: Updating Kibana Config (IP Address)
+      become: yes
+      lineinfile:
+        destfile: /etc/kibana/kibana.yml
+        regexp: 'server.host'
+        line: 'server.host: "0.0.0.0"'
+    
+    - name: Updating the port in config file for Kibana
+      become: yes
+      lineinfile:
+        destfile: /etc/kibana/kibana.yml
+        regexp: 'server.port'
+        line: 'server.port: 5601'
+    
+    - name: Updating Kibana URL
+      become: yes
+      lineinfile:
+        destfile: /etc/kibana/kibana.yml
+        regexp: 'elasticsearch.hosts'
+        line: 'elasticsearch.hosts: ["kibana_ip:9200"]'
+    
+    - name: Starting Kibana Service
+      become: yes
+      service:
+        name: kibana
+        state: started

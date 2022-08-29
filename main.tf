@@ -79,7 +79,8 @@ resource "aws_eip" "bastion_host_ip" {
 }
 
 resource "aws_instance" "demo1" {
-  ami           = data.aws_ami.ubuntu.id
+  # ami           = data.aws_ami.ubuntu.id
+  ami           = var.beats_ami_id
   instance_type = "t2.micro"
 
   vpc_security_group_ids = [aws_security_group.demo_sg.id]
@@ -91,28 +92,30 @@ resource "aws_instance" "demo1" {
   }
 }
 
-resource "aws_instance" "demo2" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+# resource "aws_instance" "demo2" {
+#   # ami           = data.aws_ami.ubuntu.id
+#   ami           = var.beats_ami_id
+#   instance_type = "t2.micro"
 
-  vpc_security_group_ids = [aws_security_group.demo_sg.id]
-  key_name = "talent-academy-lab"
-  subnet_id = aws_subnet.data2.id
+#   vpc_security_group_ids = [aws_security_group.demo_sg.id]
+#   key_name = "talent-academy-lab"
+#   subnet_id = aws_subnet.data2.id
 
-  tags = {
-    Name = "demo2-ec2"
-  }
-}
+#   tags = {
+#     Name = "demo2-ec2"
+#   }
+# }
 
-resource "aws_instance" "demo3" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t2.micro"
+# resource "aws_instance" "demo3" {
+#   # ami           = data.aws_ami.ubuntu.id
+#   ami           = var.beats_ami_id
+#   instance_type = "t2.micro"
 
-  vpc_security_group_ids = [aws_security_group.demo_sg.id]
-  key_name = "talent-academy-lab"
-  subnet_id = aws_subnet.data3.id
+#   vpc_security_group_ids = [aws_security_group.demo_sg.id]
+#   key_name = "talent-academy-lab"
+#   subnet_id = aws_subnet.data3.id
 
-  tags = {
-    Name = "demo3-ec2"
-  }
-}
+#   tags = {
+#     Name = "demo3-ec2"
+#   }
+# }

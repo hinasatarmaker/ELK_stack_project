@@ -1,0 +1,15 @@
+[web]
+54.170.71.117
+
+[elasticsearch_ip]
+192.168.2.225
+
+[kibana_ip]
+34.240.170.128
+
+[logstash_ip]
+192.168.2.137
+
+[web:vars]
+kibana_instance=ubuntu
+ansible_ssh_private_key_file=~/.ssh/talent-academy-lab.pem

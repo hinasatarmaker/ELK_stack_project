@@ -8,15 +8,16 @@ resource "aws_security_group" "kibana_sg" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = ["0.0.0.0/0"]
+    # cidr_blocks      = ["0.0.0.0/0"]
+    cidr_blocks = [ "182.70.98.52/32" ]
   }
   ingress {
     description = "ingress rules"
     from_port = 5601
     to_port = 5601
     protocol = "tcp"
-    cidr_blocks = [ "192.168.2.184/32" ]
-   
+    # cidr_blocks = [ "182.70.98.52/32" ]
+    cidr_blocks = [ "0.0.0.0/0" ]
   }
   egress {
     from_port        = 0
@@ -41,7 +42,8 @@ resource "aws_security_group" "bastion_host_sg" {
     from_port        = 22
     to_port          = 22
     protocol         = "tcp"
-    cidr_blocks      = ["106.213.109.28/32"]
+    # cidr_blocks      = ["106.213.109.28/32"]
+    cidr_blocks = [ "0.0.0.0/0" ]
   }
   
   #  ingress {
@@ -81,14 +83,16 @@ resource "aws_security_group" "elasticsearch_sg" {
     from_port = 9200
     to_port = 9200
     protocol = "tcp"
-    cidr_blocks = [ "192.168.2.21/32" ]
+    # cidr_blocks = [ "192.168.2.21/32" ]
+     cidr_blocks = [ "0.0.0.0/0" ]
   }
   ingress {
     description = "ingress rules"
     from_port = 9200
     to_port = 9200
     protocol = "tcp"
-    cidr_blocks = [ "46.137.101.160/32" ]
+    # cidr_blocks = [ "46.137.101.160/32" ]
+    cidr_blocks = [ "0.0.0.0/0" ]
   }
   egress {
     description = "egress rules"
@@ -118,7 +122,7 @@ resource "aws_security_group" "logstash_sg" {
     from_port = 5044
     to_port = 5044
     protocol = "tcp"
-    cidr_blocks = [ "192.168.2.184/32" ]
+    //cidr_blocks = [ "192.168.2.184/32" ]
     cidr_blocks = [ "0.0.0.0/0" ]
   }
   egress {
@@ -171,8 +175,8 @@ resource "aws_security_group" "demo_sg" {
     to_port = 22
     protocol = "tcp"
     # security_groups = [aws_security_group.packer_sg]
-    cidr_blocks = [ "18.203.195.175/32" ]
-    # cidr_blocks = [ "0.0.0.0/0" ]
+    # cidr_blocks = [ "18.203.195.175/32" ]
+    cidr_blocks = [ "0.0.0.0/0" ]
   }
   egress {
     description = "egress rules"

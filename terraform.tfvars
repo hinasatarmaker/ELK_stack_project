@@ -1,3 +1,4 @@
-kibana_ami_id              = "ami-0407b127d8017cf3a"
-elasticsearch_ami_id       = "ami-0d61dd26146c40de8"
-logstash_ami_id            = "ami-06d85d5be3041bf5d"
+kibana_ami_id              = "ami-070541457830a2532"
+elasticsearch_ami_id       = "ami-0415edacb17e64a92"
+logstash_ami_id            = "ami-0a3555127394703d1"
+beats_ami_id               = "ami-0cb8881a00a1d072a"

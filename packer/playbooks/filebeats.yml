@@ -1,0 +1,99 @@
+---
+- hosts: default
+  gather_facts: yes
+  become: true
+
+  tasks:
+    - name: updating apt cache if needed
+      become: yes
+      apt:
+        update_cache=yes
+  
+    - name: Installing Java Runtime Environment 
+      become: yes
+      apt:
+       name: default-jre
+       state: present
+
+    - name: Downloading Filebeat Package
+      get_url:
+        url: https://artifacts.elastic.co/downloads/beats/filebeat/filebeat-7.17.0-amd64.deb
+        dest: /tmp
+    
+    - name: Downloading metricbeat Package
+      get_url:
+        url: https://artifacts.elastic.co/downloads/beats/metricbeat/metricbeat-7.9.0-amd64.deb
+        dest: /tmp
+
+    - name: Installing FileBeat Deb Package
+      become: yes
+      apt:
+        deb: /tmp/filebeat-7.17.0-amd64.deb
+    
+    - name: Installing metricbeat Deb Package
+      become: yes
+      apt:
+        deb: /tmp/metricbeat-7.9.0-amd64.deb
+
+    - name: Removing FileBeat YAML File
+      become: yes
+      file:
+        path: /etc/filebeat/filebeat.yml
+        state: absent
+    
+    - name: Removing metricbeat YAML File
+      become: yes
+      file:
+        path: /etc/metricbeat/metricbeat.yml
+        state: absent
+
+    - name: Creating New FileBeat YAML File
+      become: yes
+      file:
+          path: /etc/filebeat/filebeat.yml
+          state: touch
+    
+    - name: Creating New metricbeat YAML File
+      become: yes
+      file:
+          path: /etc/metricbeat/metricbeat.yml
+          state: touch
+
+    - name: Adding FileBeat YAML Configuration
+      become: yes
+      blockinfile:
+          path: /etc/filebeat/filebeat.yml
+          marker: ""
+          block: |
+            filebeat.inputs:
+            - type: log
+              paths:
+              - /var/log/*.log
+            output.logstash:
+              hosts: ["logstash_ip:5044"]
+          #hosts: ["localhost:5044"]
+
+    - name: Adding metricbeat YAML Configuration
+      become: yes
+      blockinfile:
+          path: /etc/metricbeat/metricbeat.yml
+          marker: ""
+          block: |
+            metricbeat.inputs:
+            - type: log
+              paths:
+              - /var/log/*.log
+            output.logstash:
+              hosts: ["logstash_ip:5066"]
+          
+    - name: Starting FileBeat Service
+      become: yes
+      service:
+        name: filebeat
+        state: started
+    
+    - name: Starting metricbeat Service
+      become: yes
+      service:
+        name: metricbeat
+        state: started
